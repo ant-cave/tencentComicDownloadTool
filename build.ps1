@@ -10,4 +10,4 @@ pyinstaller --onefile --clean `
     --exclude-module commonmark `
     --exclude-module markdown `
     --exclude-module pygments `
-    main.py
+    .\test.py
