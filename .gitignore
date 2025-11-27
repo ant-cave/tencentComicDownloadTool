@@ -1,6 +1,12 @@
-__pychache__
+__pycache__
 
 build
 dist
 *.pyc
 *.pyo
+
+test.py
+
+res.html
+
+main.old.py

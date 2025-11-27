@@ -1,6 +1,8 @@
+from rich import print
 def get_nonce(res:str):
     import execjs
     import time
+    
     for i in range(5):
         try:
             nonce=res[res.index('window["n'):]
@@ -17,10 +19,10 @@ def get_nonce(res:str):
 
             nonce=execjs.eval(nonce)
             return nonce
-        except:
+        except Exception as e:
+            E=e
             time.sleep(0.1)
-
-    raise Exception('nonce error')
+    raise Exception(E)
     return None
 
 def get_data(res:str):
@@ -135,6 +137,10 @@ def search_comic(res:str):
     import re
     return re.findall(r'<a\s+href="/Comic/comicInfo/id/(\d+)"\s+title="([^"]+)"\s+class="mod_book_cover db"\s+target="_blank">',res)
 
-def search_chapter(res:str):
+def search_chapter_from_chapter(res:str):
     import re
     return re.findall(r'<a\s+href="/ComicView/index/id/(\d+)/cid/(\d+)"\s+title="([^"]+)">',minify_html(res))
+
+def search_chapter_from_comic(res:str):
+    import re
+    return re.findall(r'<a\s+target="_blank"\s+title="([^"]+)"\s+href="([^"]+)">([^<]+)</a>',minify_html(res))
