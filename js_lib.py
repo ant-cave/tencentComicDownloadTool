@@ -1,9 +1,9 @@
 from rich import print
 def get_nonce(res:str):
-    import execjs
+    import quickjs
     import time
     
-    for i in range(5):
+    for i in range(10):
         try:
             nonce=res[res.index('window["n'):]
 
@@ -16,8 +16,8 @@ def get_nonce(res:str):
             nonce=nonce[:nonce.index(';')]
 
             nonce=nonce[nonce.index('=')+1:]
-
-            nonce=execjs.eval(nonce)
+            ctx = quickjs.Context()
+            nonce = ctx.eval(nonce)
             return nonce
         except Exception as e:
             E=e

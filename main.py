@@ -32,36 +32,31 @@ class MainApplication:
     def show_comic_info_by_id(self, comic_id):
         url = 'https://ac.qq.com/ComicView/index/id/'+str(comic_id)+'/cid/'
         comic_url='https://ac.qq.com/Comic/comicInfo/id/'
+
+
         try:
-            for i in range(1,20):
-                req = requests.get(url+str(i))
-                res=req.text
-                with open('res.html', 'w+', encoding='utf-8') as f:
-                    f.write(res)
-                status=req.status_code
-                if status!=200:
-                    print('第'+str(i)+'次 - [red]请求失败[/red]')
-                    print('第'+str(i)+'次 - [red]状态码: '+str(status)+'[/red]')
-                else:
-                    pass
-                    #print('第'+str(i)+'次 - [green]请求成功[/green]')
-                    #print('第'+str(i)+'次 - [green]状态码: '+str(status)+'[/green]')
-                
-                if '该漫画不存在' not in res:
-                    meta_data=jl.encode(res)['comic']
 
-                    #print('第'+str(i)+'次 - [green]数据获取成功[/green]')
-                    print('[cyan][bold]动漫数据')
-                    ol.print_comic_info(meta_data)
+            res = requests.get(comic_url+str(comic_id)).text
 
+            example_chapter=jl.search_chapter_from_comic(res)[0][1]
 
-                    return meta_data
+            res = requests.get('https://ac.qq.com/'+str(example_chapter)).text
+
+            meta_data=jl.encode(res)
+            print('[cyan][bold]动漫数据')
+            ol.print_comic_info(meta_data['comic'])
+            return meta_data
+        except IndexError:
+            print('[red]漫画信息不正确![/red]')
+        except ValueError:
             print('[red]漫画信息不正确![/red]')
         except requests.RequestException:
             print('[red]连接错误 请检查网络')
         except Exception as e:
             print('[red]未知错误 请报告以下信息')
+            print('[red]'+e.with_traceback())
             print(e)
+
         return None
     
     def choose_comic(self,keyword):
