@@ -190,7 +190,6 @@ class MainApplication:
         if result[0]:
             content=self.get_search_result_by_id(result[1])
         else:
-            print('是名称'+str(result[1]))
             content=self.get_search_result_by_name(result[1])
         
         return content
