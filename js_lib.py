@@ -2,7 +2,7 @@ from rich import print
 def get_nonce(res:str):
     import quickjs
     import time
-    
+    nonce=''
     for i in range(10):
         try:
             nonce=res[res.index('window["n'):]
@@ -15,14 +15,26 @@ def get_nonce(res:str):
 
             nonce=nonce[:nonce.index(';')]
 
-            nonce=nonce[nonce.index('=')+1:]
+            nonce=nonce[nonce.index('=')+1:]            
             ctx = quickjs.Context()
-            nonce = ctx.eval(nonce)
-            return nonce
+            ctx.eval("""
+    var document = {
+        getElementsByTagName: function(tagName) {
+            return tagName === 'html' ? { length: 1 } : { length: 0 };
+        }
+    };
+""")
+            ctx.eval(r"""
+    var window = window || {};
+if (!window.Array) window.Array = Array;
+""")
+            out = ctx.eval(nonce)
+            return out
         except Exception as e:
-            E=e
             time.sleep(0.1)
-    raise Exception(E)
+            if i==9:
+                raise Exception(' 获取nonce失败\n表达式'+str(nonce)) # type: ignore
+                
     return None
 
 def get_data(res:str):
@@ -96,7 +108,7 @@ def encode(res:str):
     len_var = len(N)
     while len_var > 0:
         len_var -= 1
-        locate = int(re.search(r'\d+', N[len_var]).group()) & 255
+        locate = int(re.search(r'\d+', N[len_var]).group()) & 255 # type: ignore
         str_val = re.sub(r'\d+', '', N[len_var])
         T = T[:locate] + T[locate + len(str_val):]  # splice equivalent
     T = ''.join(T)

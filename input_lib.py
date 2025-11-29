@@ -17,9 +17,9 @@ def split_list(text:str):
                 raise Exception('格式错误')
             else:
                 for i2 in range(each1[0],each1[-1]+1):
-                    index.append(i2)
+                    index.append(i2-1)
         elif i.isdigit():
-            index.append(int(i))
+            index.append(int(i)-1)
         else:
             raise Exception('格式错误')
     
@@ -27,6 +27,3 @@ def split_list(text:str):
     output_tuple.sort()
 
     return output_tuple
-
-if __name__=='__main__':
-    print(split_list(input('>'),[]))

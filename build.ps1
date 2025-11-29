@@ -1,5 +1,5 @@
 pyinstaller --onefile --clean `
-    --upx-dir="C:\Program Files\upx-5.0.2-win64" `
+    --upx-dir="F:\Program Files\upx-5.0.2-win64" `
     --exclude-module tkinter `
     --exclude-module asyncio `
     --exclude-module pydoc `
@@ -10,4 +10,5 @@ pyinstaller --onefile --clean `
     --exclude-module commonmark `
     --exclude-module markdown `
     --exclude-module pygments `
+    -i icon.ico
     .\test.py
