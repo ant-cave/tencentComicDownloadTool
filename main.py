@@ -138,7 +138,7 @@ class MainApplication:
                 
                 # 下载图片的函数，带进度更新
                 def download_image(pic_item):
-                    file_path = chapter_path+'/'+str(pic_item['pid'])+'.jpg'
+                    file_path = chapter_path+'/'+str(pic_item['index']+1).zfill(4)+'.jpg'
                     with open(file_path, 'wb+') as f:
                         f.write(requests.get(pic_item['url']).content)
                     # 更新总进度条
@@ -148,6 +148,8 @@ class MainApplication:
                 # 使用4线程线程池下载图片
                 with ThreadPoolExecutor(max_workers=4) as executor:
                     # 提交所有任务
+                    for i, pic_item in enumerate(pic_list):
+                        pic_item['index'] = i
                     futures = [executor.submit(download_image, pic_item) for pic_item in pic_list]
                     
                     # 等待所有任务完成
